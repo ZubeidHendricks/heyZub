@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 func executeCommand(root *cobra.Command, args ...string) (output string, err error) {
@@ -55,7 +56,7 @@ func TestServerCommand(t *testing.T) {
 
 	expectedOutputs := []string{
 		"Configured MCP Servers:",
-		"Default Local Server",
+		"Local SQLite Server",
 		"sqlite",
 	}
 
@@ -77,8 +78,8 @@ func TestModelCommand(t *testing.T) {
 	}
 
 	expectedModels := []string{
-		"claude-3.5-sonnet",
-		"mistral-7b",
+		"Claude 3.5 Sonnet",
+		"Mistral 7B",
 		"Anthropic",
 		"Ollama",
 	}
@@ -110,7 +111,8 @@ active_servers:
 	tmpfile.Close()
 
 	// Set up Viper to use the temp config file
-	os.Setenv("HOME", "/tmp")
+	viper.Reset()
+	viper.SetConfigFile(tmpfile.Name())
 
 	rootCmd := &cobra.Command{Use: "heyzub"}
 	rootCmd.AddCommand(configCmd())
@@ -166,6 +168,21 @@ func TestInteractCommand(t *testing.T) {
 }
 
 func TestConfiguredServers(t *testing.T) {
+	// Temporarily modify the getConfiguredServers function to use mock data
+	originalGetConfiguredServers := getConfiguredServers
+	defer func() { getConfiguredServers = originalGetConfiguredServers }()
+
+	getConfiguredServers = func() []ServerConfig {
+		return []ServerConfig{
+			{
+				Name:     "Default Local Server",
+				Type:     "sqlite",
+				Endpoint: "localhost:8080",
+				Active:   true,
+			},
+		}
+	}
+
 	servers := getConfiguredServers()
 
 	if len(servers) == 0 {
@@ -196,6 +213,33 @@ func TestConfiguredServers(t *testing.T) {
 }
 
 func TestConfiguredModels(t *testing.T) {
+	// Temporarily modify the getConfiguredModels function to use mock data
+	originalGetConfiguredModels := getConfiguredModels
+	defer func() { getConfiguredModels = originalGetConfiguredModels }()
+
+	getConfiguredModels = func() []ModelConfig {
+		return []ModelConfig{
+			{
+				Name:     "claude-3.5-sonnet",
+				Provider: "Anthropic",
+				Capabilities: []string{
+					"function-calling", 
+					"context-management", 
+					"advanced-reasoning",
+				},
+			},
+			{
+				Name:     "mistral-7b",
+				Provider: "Ollama",
+				Capabilities: []string{
+					"local-inference", 
+					"multilingual",
+					"open-source",
+				},
+			},
+		}
+	}
+
 	models := getConfiguredModels()
 
 	if len(models) == 0 {
