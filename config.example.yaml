@@ -1,0 +1,37 @@
+# HeyZub Configuration Example
+
+# Default model configuration
+default_model: claude-3.5-sonnet
+
+# Active servers
+active_servers:
+  - local-sqlite
+  - filesystem
+
+# Detailed server configurations
+servers:
+  - name: local-sqlite
+    type: sqlite
+    endpoint: localhost:8080
+    active: true
+
+  - name: filesystem
+    type: filesystem
+    endpoint: /tmp/mcp-server
+    active: true
+
+# Configured models
+models:
+  - name: claude-3.5-sonnet
+    provider: Anthropic
+    capabilities:
+      - function-calling
+      - context-management
+      - advanced-reasoning
+
+  - name: mistral-7b
+    provider: Ollama
+    capabilities:
+      - local-inference
+      - multilingual
+      - open-source

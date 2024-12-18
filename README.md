@@ -6,7 +6,7 @@
 - 🚀 Multi-model support
 - 🔧 Flexible configuration
 - 📡 Dynamic server management
-- 🤖 Intelligent context handling
+- 🤖 Interactive MCP sessions
 
 ### Installation
 ```bash
@@ -15,18 +15,25 @@ go install github.com/ZubeidHendricks/heyZub@latest
 
 ### Quick Start
 ```bash
-# Basic usage
-heyzub
-
-# Check version
+# Show version
 heyzub version
 
-# Manage servers
+# List available servers
 heyzub server
+
+# List available models
+heyzub model
+
+# Start interactive session
+heyzub interact
 ```
 
+### Configuration
+Create `~/.heyzub.yaml` for persistent settings.
+See `config.example.yaml` for reference.
+
 ### Contributing
-Open to contributions!
+Open to contributions! Check out our guidelines.
 
 ### License
 MIT License
